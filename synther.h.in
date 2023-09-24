@@ -1,0 +1,2 @@
+#define synther_VERSION_MAJOR @synther_VERSION_MAJOR@
+#define synther_VERSION_MINOR @synther_VERSION_MINOR@
