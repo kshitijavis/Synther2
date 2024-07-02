@@ -1,4 +1,13 @@
-set(LOGIC note.cpp ${synther_SOURCE_DIR}/include/logic/note.h)
-add_library(logic ${LOGIC})
+set(LOGIC_SOURCES
+    "note.cpp"
+)
+set(LOGIC_HEADERS
+    ${synther_SOURCE_DIR}/include/logic/note.h
+)
 
-target_include_directories(logic PUBLIC ${synther_SOURCE_DIR}/include)
+add_library(${LOGIC_LIBRARY_NAME} STATIC
+    ${LOGIC_SOURCES}
+    ${LOGIC_HEADERS}
+)
+
+target_include_directories(${LOGIC_LIBRARY_NAME} PUBLIC ${synther_SOURCE_DIR}/include)
