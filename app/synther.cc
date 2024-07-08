@@ -1,7 +1,7 @@
-#include "config.hpp"
+#include "config.h"
 
 #include <iostream>
-#include "logic/note.hpp"
+#include "logic/note.h"
 
 int main(int argc, char *argv[]) {
   std::cout << argv[0] << " Version " << synther_VERSION_MAJOR << "."

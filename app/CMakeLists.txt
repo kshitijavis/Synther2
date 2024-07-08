@@ -1,5 +1,5 @@
 set(APP_SOURCES
-    "synther.cpp"
+    "synther.cc"
 )
 set(APP_INCLUDES
     "${CMAKE_BINARY_DIR}/configured_files/include"

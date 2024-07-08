@@ -1,8 +1,8 @@
 set(LOGIC_SOURCES
-    "note.cpp"
+    "note.cc"
 )
 set(LOGIC_HEADERS
-    ${synther_SOURCE_DIR}/include/logic/note.hpp
+    ${synther_SOURCE_DIR}/include/logic/note.h
 )
 
 add_library(${LOGIC_LIBRARY_NAME} STATIC
