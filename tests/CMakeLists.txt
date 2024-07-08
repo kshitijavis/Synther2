@@ -3,7 +3,7 @@ include(Catch)
 if(ENABLE_TESTING)
     set(TEST_MAIN "unit_test")
     set(TEST_SOURCES 
-        "test_note.cc"
+        "test_note.cpp"
     )
     set(TEST_INCLUDES "./")
 

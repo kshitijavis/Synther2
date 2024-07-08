@@ -11,11 +11,10 @@ set(LOGIC_LIBRARY_NAME logic)
 
 option(ENABLE_TESTING "Enable a Unit Testing build" ON)
 
-configure_file(synther.h.in synther.h)
-
 # Directories
 add_subdirectory(app)
 add_subdirectory(src)
+add_subdirectory(configured)
 
 # Includes
 include(FetchContent)

@@ -1,4 +1,4 @@
-#include "logic/note.h"
+#include "logic/note.hpp"
 
 using synther::Note;
 
