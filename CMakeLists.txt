@@ -9,12 +9,30 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 set(EXECUTABLE_NAME synther)
 set(LOGIC_LIBRARY_NAME logic)
 
+option(ENABLE_TESTING "Enable a Unit Testing build" ON)
+
 configure_file(synther.h.in synther.h)
 
-# Libraries
+# Directories
 add_subdirectory(app)
 add_subdirectory(src)
 
-target_include_directories(synther PUBLIC 
-    "${PROJECT_BINARY_DIR}"
-)
+# Includes
+include(FetchContent)
+
+# Dependencies
+if(ENABLE_TESTING)
+    FetchContent_Declare(
+        Catch2
+        GIT_REPOSITORY https://github.com/catchorg/Catch2
+        GIT_TAG v3.5.3
+        GIT_SHALLOW TRUE 
+    )
+    FetchContent_MakeAvailable(Catch2)
+endif()
+
+if(ENABLE_TESTING)
+    include(CTest)
+    enable_testing()
+    add_subdirectory(tests)
+endif()
