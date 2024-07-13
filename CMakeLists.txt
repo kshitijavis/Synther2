@@ -32,6 +32,6 @@ endif()
 
 if(ENABLE_TESTING)
     include(CTest)
-    enable_testing()
     add_subdirectory(tests)
+    enable_testing()
 endif()

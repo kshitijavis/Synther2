@@ -8,5 +8,7 @@ Note::Note(int midi_index) : midi_index_{midi_index} {}
 
 int Note::GetMidiIndex() { return midi_index_; }
 
+int Note::GetOctave() { return kBaseOctave + (midi_index_ / kOctaveLength); }
+
 }  // namespace logic
 }  // namespace synther

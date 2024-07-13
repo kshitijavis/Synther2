@@ -15,4 +15,8 @@ if(ENABLE_TESTING)
     )
 
     catch_discover_tests(${TEST_MAIN})
+
+    # Run make check to compile tests (make unit_test) AND run them (make test)
+    add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
+    add_dependencies(check ${TEST_MAIN})
 endif()
