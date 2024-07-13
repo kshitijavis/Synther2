@@ -1,7 +1,12 @@
-#include "logic/note.h"
+#include "note.h"
 
-using synther::Note;
+namespace synther {
 
-Note::Note(int n) {
-  num = n;
-}
+namespace logic {
+
+Note::Note(int midi_index) : midi_index_{midi_index} {}
+
+int Note::GetMidiIndex() { return midi_index_; }
+
+}  // namespace logic
+}  // namespace synther
