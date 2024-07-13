@@ -18,7 +18,7 @@ class Note {
  public:
   static const NoteLetter kBaseNote = NoteLetter::C;
   static constexpr int kBaseOctave = -1;
-  static constexpr int kOctaveLength = 12;
+  static constexpr size_t kOctaveLength = 12;
 
   /**
    * Construct note given a midi index, as an offset from the base note C_-1
@@ -28,12 +28,12 @@ class Note {
    * accidental, but priority is passes as Natural, then an exception is thrown.
    * If the note does not require an accidental, then priority is ignored
    */
-  Note(int midi_index, Accidental priority);
+  Note(unsigned midi_index, Accidental priority);
 
-  int GetMidiIndex();
-  int GetOctave();
-  Accidental GetAccidental();
-  NoteLetter GetNoteLetter();
+  int GetMidiIndex() const;
+  int GetOctave() const;
+  Accidental GetAccidental() const;
+  NoteLetter GetNoteLetter() const;
 
  private:
   static const std::map<NoteLetter, int> kWholetoneIndices;
@@ -44,7 +44,7 @@ class Note {
     int octave;
   };
 
-  const int midi_index_;
+  const unsigned midi_index_;
   const EnglishName english_name_;
 
   EnglishName ComputeEnglishName(int midi_index, Accidental priority);

@@ -9,14 +9,14 @@ const std::map<NoteLetter, int> Note::kWholetoneIndices{
     {NoteLetter::F, 5}, {NoteLetter::G, 7}, {NoteLetter::A, 9},
     {NoteLetter::B, 11}};
 
-Note::Note(int midi_index, Accidental priority)
+Note::Note(unsigned midi_index, Accidental priority)
     : midi_index_{midi_index},
       english_name_{ComputeEnglishName(midi_index, priority)} {}
 
-int Note::GetMidiIndex() { return midi_index_; }
-int Note::GetOctave() { return english_name_.octave; }
-Accidental Note::GetAccidental() { return english_name_.accidental; }
-NoteLetter Note::GetNoteLetter() { return english_name_.note_letter; };
+int Note::GetMidiIndex() const { return midi_index_; }
+int Note::GetOctave() const { return english_name_.octave; }
+Accidental Note::GetAccidental() const { return english_name_.accidental; }
+NoteLetter Note::GetNoteLetter() const { return english_name_.note_letter; };
 
 Note::EnglishName Note::ComputeEnglishName(int midi_index, Accidental priority) {
   EnglishName english_name_;
@@ -42,8 +42,10 @@ Note::EnglishName Note::ComputeEnglishName(int midi_index, Accidental priority) 
           "Note requires accidental, cannot provide Natural priority");
     case Accidental::Flat:
       english_name_.note_letter = reversedWholeToneIndices.at(octave_index + 1);
+      break;
     case Accidental::Sharp:
       english_name_.note_letter = reversedWholeToneIndices.at(octave_index - 1);
+      break;
   }
 
   english_name_.accidental = priority;
