@@ -1,14 +1,54 @@
-#include "note.h"
+#include "logic/note.h"
 
 namespace synther {
 
 namespace logic {
 
-Note::Note(int midi_index) : midi_index_{midi_index} {}
+const std::map<NoteLetter, int> Note::kWholetoneIndices{
+    {NoteLetter::C, 0}, {NoteLetter::D, 2}, {NoteLetter::E, 4},
+    {NoteLetter::F, 5}, {NoteLetter::G, 7}, {NoteLetter::A, 9},
+    {NoteLetter::B, 11}};
+
+Note::Note(int midi_index, Accidental priority)
+    : midi_index_{midi_index},
+      english_name_{ComputeEnglishName(midi_index, priority)} {}
 
 int Note::GetMidiIndex() { return midi_index_; }
+int Note::GetOctave() { return english_name_.octave; }
+Accidental Note::GetAccidental() { return english_name_.accidental; }
+NoteLetter Note::GetNoteLetter() { return english_name_.note_letter; };
 
-int Note::GetOctave() { return kBaseOctave + (midi_index_ / kOctaveLength); }
+Note::EnglishName Note::ComputeEnglishName(int midi_index, Accidental priority) {
+  EnglishName english_name_;
+  english_name_.octave = kBaseOctave + midi_index / kOctaveLength;
+  int octave_index = midi_index % kOctaveLength;
+
+  std::map<int, NoteLetter> reversedWholeToneIndices;
+  for (const auto &wholeToneIndexPair : kWholetoneIndices) {
+    reversedWholeToneIndices[wholeToneIndexPair.second] =
+        wholeToneIndexPair.first;
+  }
+
+  auto potentialNote = reversedWholeToneIndices.find(octave_index);
+  if (potentialNote != reversedWholeToneIndices.end()) {
+    english_name_.note_letter = potentialNote->second;
+    english_name_.accidental = Accidental::Natural;
+    return english_name_;
+  }
+
+  switch (priority) {
+    case Accidental::Natural:
+      throw std::invalid_argument(
+          "Note requires accidental, cannot provide Natural priority");
+    case Accidental::Flat:
+      english_name_.note_letter = reversedWholeToneIndices.at(octave_index + 1);
+    case Accidental::Sharp:
+      english_name_.note_letter = reversedWholeToneIndices.at(octave_index - 1);
+  }
+
+  english_name_.accidental = priority;
+  return english_name_;
+}
 
 }  // namespace logic
 }  // namespace synther

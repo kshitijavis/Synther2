@@ -1,10 +1,13 @@
 #pragma once
 
+#include <map>
+
 namespace synther {
 
 namespace logic {
 
 enum class NoteLetter { A, B, C, D, E, F, G };
+enum class Accidental { Sharp, Flat, Natural };
 
 /**
  * Represents a music note. Uses the MIDI standard to index notes based on their
@@ -17,14 +20,34 @@ class Note {
   static constexpr int kBaseOctave = -1;
   static constexpr int kOctaveLength = 12;
 
-  Note(int midi_index);
+  /**
+   * Construct note given a midi index, as an offset from the base note C_-1
+   * @param midi_index the index of the note from C_-1
+   * @param priority if the note requires an accidental, this param specifies
+   * which type of accidental takes priority. If the note requires an
+   * accidental, but priority is passes as Natural, then an exception is thrown.
+   * If the note does not require an accidental, then priority is ignored
+   */
+  Note(int midi_index, Accidental priority);
 
   int GetMidiIndex();
   int GetOctave();
+  Accidental GetAccidental();
+  NoteLetter GetNoteLetter();
 
  private:
-  // Number of notes away from C_-1
+  static const std::map<NoteLetter, int> kWholetoneIndices;
+
+  struct EnglishName {
+    NoteLetter note_letter;
+    Accidental accidental;
+    int octave;
+  };
+
   const int midi_index_;
+  const EnglishName english_name_;
+
+  EnglishName ComputeEnglishName(int midi_index, Accidental priority);
 };
 
 }  // namespace logic

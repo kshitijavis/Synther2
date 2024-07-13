@@ -11,4 +11,4 @@ add_library(${LOGIC_LIBRARY_NAME} STATIC
     ${LOGIC_HEADERS}
 )
 
-target_include_directories(${LOGIC_LIBRARY_NAME} PUBLIC ${synther_SOURCE_DIR}/include/logic)
+target_include_directories(${LOGIC_LIBRARY_NAME} PUBLIC ${synther_SOURCE_DIR}/include)
