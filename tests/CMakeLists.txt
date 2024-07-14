@@ -4,6 +4,7 @@ if(ENABLE_TESTING)
     set(TEST_MAIN "unit_test")
     set(TEST_SOURCES 
         "test_note.cc"
+        "test_key.cc"
     )
     set(TEST_INCLUDES "./")
 

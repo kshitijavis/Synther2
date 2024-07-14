@@ -1,8 +1,10 @@
 set(LOGIC_SOURCES
     "note.cc"
+    "key.cc"
 )
 set(LOGIC_HEADERS
     ${synther_SOURCE_DIR}/include/logic/note.h
+    ${synther_SOURCE_DIR}/include/logic/key.h
 )
 message(${LOGIC_HEADERS})
 

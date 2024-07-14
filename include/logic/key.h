@@ -1,16 +1,31 @@
 #pragma once
 
+#include <set>
+
 #include "note.h"
 
 namespace synther {
 namespace logic {
 
-enum class KeyColor { kWhite, kBlack };
+enum class KeyColor { White, Black };
 
 class Key {
+ public:
+  Key(const Note& note);
+
+  KeyColor GetKeyColor() const;
+  const Note& GetNote() const;
+  bool IsPressed() const;
+
+  void Press();
+  void Release();
+
  private:
-  logic::Note note_;
+  const logic::Note note_;
   logic::KeyColor key_color_;
+  bool is_pressed_;
+
+  KeyColor ComputeKeyColor(unsigned midi_index);
 };
 
 }  // namespace logic

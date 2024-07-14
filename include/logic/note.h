@@ -30,6 +30,15 @@ class Note {
    */
   Note(unsigned midi_index, Accidental priority);
 
+  /**
+   * Construct note given English name components. The smallest possible note is
+   * C_-1
+   * @param note_letter an English note letter
+   * @param accidental sharp, flat or natural
+   * @param octave the octave of the note. Smallest possible value is -1
+   */
+  Note(int octave, NoteLetter note_letter, Accidental accidental);
+
   int GetMidiIndex() const;
   int GetOctave() const;
   Accidental GetAccidental() const;
@@ -48,6 +57,7 @@ class Note {
   const EnglishName english_name_;
 
   EnglishName ComputeEnglishName(int midi_index, Accidental priority);
+  unsigned ComputeMidiIndex(int octave, NoteLetter note_letter, Accidental accidental);
 };
 
 }  // namespace logic

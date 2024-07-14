@@ -1,5 +1,4 @@
 #include <catch2/catch_test_macros.hpp>
-#include <catch2/generators/catch_generators.hpp>
 
 #include "logic/note.h"
 
@@ -23,7 +22,7 @@ TEST_CASE("Midi index constrcutor correctly generates octave numbers",
     REQUIRE(note.GetAccidental() == Accidental::Sharp);
   }
 
-  SECTION("Midi index 5 is A_-1") {
+  SECTION("Midi index 5 is F_-1") {
     Note note(5, Accidental::Sharp);
     REQUIRE(note.GetOctave() == -1);
     REQUIRE(note.GetNoteLetter() == NoteLetter::F);
@@ -196,5 +195,69 @@ TEST_CASE("Midi index constrcutor correctly generates accidentals",
     REQUIRE(note2.GetOctave() == 7);
     REQUIRE(note2.GetNoteLetter() == NoteLetter::D);
     REQUIRE(note2.GetAccidental() == Accidental::Flat);
+  }
+
+  SECTION("If note has accidental, but Natural priority provided, throw exception") {
+    REQUIRE_THROWS(Note(97, Accidental::Natural));
+  }
+}
+
+TEST_CASE("English Name constructor correctly computes midi index", "[constructor]") {
+  SECTION("Midi index 0 is C_-1") {
+    Note note(-1, NoteLetter::C, Accidental::Natural);
+    REQUIRE(note.GetMidiIndex() == 0);
+  }
+
+  SECTION("Midi index 1 is C#_-1") {
+    Note note(-1, NoteLetter::C, Accidental::Sharp);
+    REQUIRE(note.GetMidiIndex() == 1);
+  }
+
+  SECTION("Midi index 5 is A_-1") {
+    Note note(-1, NoteLetter::F, Accidental::Natural);
+    REQUIRE(note.GetMidiIndex() == 5);
+  }
+
+  SECTION("Midi index 11 is B_-1") {
+    Note note(-1, NoteLetter::B, Accidental::Natural);
+    REQUIRE(note.GetMidiIndex() == 11);
+  }
+
+  SECTION("Midi index 12 is C0") {
+    Note note(0, NoteLetter::C, Accidental::Natural);
+    REQUIRE(note.GetMidiIndex() == 12);
+  }
+
+  SECTION("Midi index 21 is A0") {
+    Note note(0, NoteLetter::A, Accidental::Natural);
+    REQUIRE(note.GetMidiIndex() == 21);
+  }
+
+  SECTION("Midi index 30 is F#1") {
+    Note note(1, NoteLetter::F, Accidental::Sharp);
+    REQUIRE(note.GetMidiIndex() == 30);
+  }
+
+  SECTION("Midi index 41 is F2") {
+    Note note(2, NoteLetter::F, Accidental::Natural);
+    REQUIRE(note.GetMidiIndex() == 41);
+  }
+
+  SECTION("Midi index 108 is C8") {
+    Note note(8, NoteLetter::C, Accidental::Natural);
+    REQUIRE(note.GetMidiIndex() == 108);
+  }
+
+  SECTION("Midi index 127 is G9") {
+    Note note(9, NoteLetter::G, Accidental::Natural);
+    REQUIRE(note.GetMidiIndex() == 127);
+  }
+
+  SECTION("Notes too small throw exception") {
+    REQUIRE_NOTHROW(Note(-1, NoteLetter::B, Accidental::Flat));
+    REQUIRE_NOTHROW(Note(-1, NoteLetter::C, Accidental::Sharp));
+    REQUIRE_THROWS(Note(-1, NoteLetter::C, Accidental::Flat));
+    REQUIRE_THROWS(Note(-2, NoteLetter::B, Accidental::Natural));
+    REQUIRE_THROWS(Note(-2, NoteLetter::B, Accidental::Flat));
   }
 }
