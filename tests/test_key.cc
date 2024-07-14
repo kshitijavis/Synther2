@@ -45,3 +45,26 @@ TEST_CASE("Test key color set correctly", "[constructor][keycolor]") {
     REQUIRE(key3.GetKeyColor() == KeyColor::White);
   }
 }
+
+TEST_CASE("Test Key Press", "[constructor][press][release]") {
+  SECTION("Key is released at start") {
+    Key key(Note(4, NoteLetter::C, Accidental::Natural));
+    REQUIRE(!key.IsPressed());
+  }
+
+  SECTION("Key can be presed") {
+    Key key(Note(4, NoteLetter::C, Accidental::Natural));
+    key.Press();
+    REQUIRE(key.IsPressed());
+  }
+
+  SECTION("Pressed key can be released") {
+    Key key(Note(4, NoteLetter::C, Accidental::Natural));
+    
+    key.Press();
+    REQUIRE(key.IsPressed());
+
+    key.Release();
+    REQUIRE(!key.IsPressed());
+  }
+}
