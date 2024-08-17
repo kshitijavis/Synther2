@@ -22,6 +22,18 @@ int Note::GetOctave() const { return english_name_.octave; }
 Accidental Note::GetAccidental() const { return english_name_.accidental; }
 NoteLetter Note::GetNoteLetter() const { return english_name_.note_letter; };
 
+bool Note::operator==(const Note& other) const {
+  return midi_index_ == other.midi_index_ &&
+    english_name_.accidental == other.english_name_.accidental &&
+    english_name_.note_letter == other.english_name_.note_letter &&
+    english_name_.octave == other.english_name_.octave;
+}
+
+bool Note::EqualsMidiIndex(const Note& other) const {
+  return midi_index_ == other.midi_index_;
+}
+
+// Private methods
 Note::EnglishName Note::ComputeEnglishName(int midi_index,
                                            Accidental priority) {
   EnglishName english_name_;

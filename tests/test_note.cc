@@ -2,9 +2,11 @@
 
 #include "logic/note.h"
 
+#include <iostream>
 using synther::logic::Accidental;
 using synther::logic::Note;
 using synther::logic::NoteLetter;
+
 
 TEST_CASE("Midi index constrcutor correctly generates octave numbers",
           "[constructor][octave]") {
@@ -259,5 +261,49 @@ TEST_CASE("English Name constructor correctly computes midi index", "[constructo
     REQUIRE_THROWS(Note(-1, NoteLetter::C, Accidental::Flat));
     REQUIRE_THROWS(Note(-2, NoteLetter::B, Accidental::Natural));
     REQUIRE_THROWS(Note(-2, NoteLetter::B, Accidental::Flat));
+  }
+}
+
+TEST_CASE("Operators behave as expected", "[constructor][accidental]") {
+  SECTION("Two equal notes are equal") {
+    Note note1{5, Accidental::Sharp};
+    Note note2{5, Accidental::Sharp};
+
+    REQUIRE(note1 == note2);
+  }
+
+  SECTION("Two notes with different midi_index are not equal") {
+    Note note1{5, Accidental::Sharp};
+    Note note2{6, Accidental::Sharp};
+
+    REQUIRE_FALSE(note1 == note2);
+  }
+
+  SECTION("Two notes with same midi_index but different letters are not equal") {
+    Note note1{5, NoteLetter::C, Accidental::Natural};
+    Note note2{5, NoteLetter::B, Accidental::Sharp};
+
+    REQUIRE_FALSE(note1 == note2);
+  }
+
+  SECTION("Two equal notes return true for EqualsMidiIndex") {
+    Note note1{5, Accidental::Sharp};
+    Note note2{5, Accidental::Sharp};
+
+    REQUIRE(note1.EqualsMidiIndex(note2));
+  }
+
+  SECTION("Two notes with different midi_index return false for EqualsMidiIndex") {
+    Note note1{5, Accidental::Sharp};
+    Note note2{6, Accidental::Sharp};
+
+    REQUIRE_FALSE(note1.EqualsMidiIndex(note2));
+  }
+
+  SECTION("Two notes with same midi_index but different letters return true for EqualsMidiIndex") {
+    Note note1{5, NoteLetter::D, Accidental::Sharp};
+    Note note2{5, NoteLetter::E, Accidental::Flat};
+
+    REQUIRE(note1.EqualsMidiIndex(note2));
   }
 }

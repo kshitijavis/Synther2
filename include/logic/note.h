@@ -43,6 +43,9 @@ class Note {
   int GetOctave() const;
   Accidental GetAccidental() const;
   NoteLetter GetNoteLetter() const;
+  
+  bool operator==(const Note& other) const;
+  bool EqualsMidiIndex(const Note& other) const;
 
  private:
   static const std::map<NoteLetter, int> kWholetoneIndices;
