@@ -7,6 +7,10 @@
 namespace synther {
 namespace logic {
 
+/**
+ * A music key that can be played on a keyboard. Automatically determines color
+ * (white, black) of the key and allows the note to be pressed and released
+ */
 enum class KeyColor { White, Black };
 
 class Key {

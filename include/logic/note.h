@@ -43,7 +43,7 @@ class Note {
   int GetOctave() const;
   Accidental GetAccidental() const;
   NoteLetter GetNoteLetter() const;
-  
+
   bool operator==(const Note& other) const;
   bool EqualsMidiIndex(const Note& other) const;
 
@@ -56,11 +56,43 @@ class Note {
     int octave;
   };
 
-  const unsigned midi_index_;
-  const EnglishName english_name_;
+  unsigned midi_index_;
+  EnglishName english_name_;
 
   EnglishName ComputeEnglishName(int midi_index, Accidental priority);
   unsigned ComputeMidiIndex(int octave, NoteLetter note_letter, Accidental accidental);
+};
+
+/**
+ * An iterator for Notes. Allows traversing the musical scale in a consistent way. Priotizes
+ * constructions based on Accidental::Sharp
+ *
+ * Incrementing and decrementing causes the iterator to create new instances of Note.
+ * Notes are not maintained in memory during iteration.
+ */
+class NoteIterator {
+  using iterator_category = std::forward_iterator_tag;
+  using different_type = int;
+  using value_type = Note;
+  using pointer = Note*;
+  using reference = Note&;
+
+ public:
+  static const Accidental kDefaultAccidental = Accidental::Sharp;
+
+  NoteIterator(Note note);
+  const Note& operator*() const;
+  const Note* operator->() const;
+  NoteIterator operator++();     // prefix
+  NoteIterator operator++(int);  // postfix
+  bool operator==(const NoteIterator& other) const;
+  bool operator!=(const NoteIterator& other) const;
+
+ private:
+  Note note_;
+
+  bool equals(const NoteIterator& other) const;
+  Note getNextNote() const;
 };
 
 }  // namespace logic

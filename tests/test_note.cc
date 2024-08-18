@@ -1,15 +1,13 @@
 #include <catch2/catch_test_macros.hpp>
+#include <iostream>
 
 #include "logic/note.h"
-
-#include <iostream>
 using synther::logic::Accidental;
 using synther::logic::Note;
+using synther::logic::NoteIterator;
 using synther::logic::NoteLetter;
 
-
-TEST_CASE("Midi index constrcutor correctly generates octave numbers",
-          "[constructor][octave]") {
+TEST_CASE("Midi index constrcutor correctly generates octave numbers", "[constructor][octave]") {
   SECTION("Midi index 0 is C_-1") {
     Note note(0, Accidental::Sharp);
     REQUIRE(note.GetOctave() == -1);
@@ -81,8 +79,7 @@ TEST_CASE("Midi index constrcutor correctly generates octave numbers",
   }
 }
 
-TEST_CASE("Midi index constrcutor correctly generates note letters",
-          "[constructor][noteletter]") {
+TEST_CASE("Midi index constrcutor correctly generates note letters", "[constructor][noteletter]") {
   SECTION("Midi index 60 is C4") {
     Note note(60, Accidental::Sharp);
     REQUIRE(note.GetOctave() == 4);
@@ -168,8 +165,7 @@ TEST_CASE("Midi index constrcutor correctly generates note letters",
   }
 }
 
-TEST_CASE("Midi index constrcutor correctly generates accidentals",
-          "[constructor][accidental]") {
+TEST_CASE("Midi index constrcutor correctly generates accidentals", "[constructor][accidental]") {
   SECTION("If note is natural, priority is ignored") {
     Note note(72, Accidental::Sharp);
     REQUIRE(note.GetOctave() == 5);
@@ -199,7 +195,9 @@ TEST_CASE("Midi index constrcutor correctly generates accidentals",
     REQUIRE(note2.GetAccidental() == Accidental::Flat);
   }
 
-  SECTION("If note has accidental, but Natural priority provided, throw exception") {
+  SECTION(
+      "If note has accidental, but Natural priority provided, throw "
+      "exception") {
     REQUIRE_THROWS(Note(97, Accidental::Natural));
   }
 }
@@ -300,10 +298,91 @@ TEST_CASE("Operators behave as expected", "[constructor][accidental]") {
     REQUIRE_FALSE(note1.EqualsMidiIndex(note2));
   }
 
-  SECTION("Two notes with same midi_index but different letters return true for EqualsMidiIndex") {
+  SECTION(
+      "Two notes with same midi_index but different letters return true for "
+      "EqualsMidiIndex") {
     Note note1{5, NoteLetter::D, Accidental::Sharp};
     Note note2{5, NoteLetter::E, Accidental::Flat};
 
     REQUIRE(note1.EqualsMidiIndex(note2));
+  }
+}
+
+TEST_CASE("Test NoteIterator", "[constructor][noteiterator]") {
+  SECTION("Constrcutor creates note with correct fields") {
+    Note note(5, NoteLetter::C, Accidental::Natural);
+    NoteIterator iterator(note);
+
+    REQUIRE(*iterator == note);
+  }
+
+  SECTION("Arrow operator pulls correct fields") {
+    Note note(70, Accidental::Sharp);
+    NoteIterator iterator(note);
+
+    REQUIRE(iterator->GetNoteLetter() == NoteLetter::A);
+    REQUIRE(iterator->GetAccidental() == Accidental::Sharp);
+    REQUIRE(iterator->GetOctave() == 4);
+    REQUIRE(iterator->GetMidiIndex() == 70);
+  }
+
+  SECTION("Prefix Increment operator correctly moves to next note") {
+    Note note(70, Accidental::Sharp);
+    NoteIterator iterator(note);
+    NoteIterator next_iterator = ++iterator;
+
+    Note expected_note(4, NoteLetter::B, Accidental::Natural);
+
+    REQUIRE(*iterator == expected_note);
+    REQUIRE(*next_iterator == expected_note);
+  }
+
+  SECTION("Postfix Increment operator correctly moves to next note") {
+    Note note(70, Accidental::Sharp);
+    NoteIterator iterator(note);
+    NoteIterator old_iterator = iterator++;
+
+    Note expected_next_note(4, NoteLetter::B, Accidental::Natural);
+
+    REQUIRE(*iterator == expected_next_note);
+    REQUIRE(*old_iterator == note);
+
+    // Sanity check
+    REQUIRE_FALSE(*iterator == note);
+    REQUIRE_FALSE(*old_iterator == expected_next_note);
+  }
+
+  SECTION("Two of the same Iterator instances are equal") {
+    NoteIterator iterator(Note(70, Accidental::Sharp));
+
+    REQUIRE(iterator == iterator);
+    REQUIRE_FALSE(iterator != iterator);
+  }
+
+  SECTION("Two idential, but different instance, Iterators are equal") {
+    NoteIterator iterator1(Note(70, Accidental::Sharp));
+    NoteIterator iterator2(Note(70, Accidental::Sharp));
+
+    REQUIRE(iterator1 == iterator2);
+    REQUIRE_FALSE(iterator1 != iterator2);
+  }
+
+  SECTION("After iteration, two identical iterators are equal") {
+    NoteIterator iterator1(Note(70, Accidental::Sharp));
+    NoteIterator iterator2(Note(69, Accidental::Sharp));
+    iterator2++;
+
+    REQUIRE(iterator1 == iterator2);
+    REQUIRE_FALSE(iterator1 != iterator2);
+  }
+
+  SECTION("Test note iteration in a loop") {
+    int note_count = 0;
+    for (NoteIterator it = NoteIterator(Note(69, Accidental::Natural));
+         it != NoteIterator(Note(81, Accidental::Natural)); ++it) {
+      ++note_count;
+    }
+
+    REQUIRE(12 == note_count);
   }
 }
